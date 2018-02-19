@@ -9,8 +9,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import static springfox.documentation.builders.PathSelectors.regex;
-
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -25,11 +23,11 @@ public class SwaggerConfig {
     }
     private ApiInfo metaData() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("Swagger-Spring-Rest-Integration")
-                .description("Swagger Spring API")
-                .termsOfServiceUrl("Own Terms")
+                .title("Promethean Cloud Solutions - WhatsNext")
+                .description("WhatsNext - path to win elections")
+                .termsOfServiceUrl("Copyright Promethean Cloud. All Rights Reserved.")
                 .version("1.0")
-                .contact("Sheshank Gujjari(sheshankgujjari@hotmail.com)")
+                .contact("info@prometheancloud.com")
                 .build();
         return apiInfo;
     }

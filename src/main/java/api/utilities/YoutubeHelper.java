@@ -19,6 +19,7 @@ import com.google.api.services.youtube.YouTubeScopes;
 import com.google.api.services.youtube.model.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -66,7 +67,7 @@ public class YoutubeHelper {
      * at ~/.credentials/drive-java-quickstart
      */
     private static final List<String> SCOPES =
-            Arrays.asList(YouTubeScopes.YOUTUBE_READONLY);
+            Arrays.asList(YouTubeScopes.YOUTUBE_UPLOAD);
 
     static {
         try {
@@ -236,9 +237,8 @@ public class YoutubeHelper {
         }
     }
 
-    public static Video uploadVideo(String videoFileName) {
+    public static Video uploadVideo(String videoFileName, InputStream is) {
        try {
-
             List<String> scopes =
                     Arrays.asList(YouTubeScopes.YOUTUBE_UPLOAD);
             YouTube youtube = getYouTubeService(scopes);
@@ -274,14 +274,13 @@ public class YoutubeHelper {
             tags.add("example");
             tags.add("java");
             tags.add("YouTube Data API V3");
-            tags.add("erase me");
+            tags.add("happy me");
             snippet.setTags(tags);
 
             // Add the completed snippet object to the video resource.
             videoObjectDefiningMetadata.setSnippet(snippet);
 
-            InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,
-                    YoutubeHelper.class.getResourceAsStream(videoFileName));
+            InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT, is);
 
            //InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT, YoutubeHelper.class.getResourceAsStream("/sample-video.mp4"));
 
@@ -317,7 +316,7 @@ public class YoutubeHelper {
                             break;
                         case MEDIA_IN_PROGRESS:
                             System.out.println("Upload in progress");
-                            System.out.println("Upload percentage: " + uploader.getProgress());
+                            //System.out.println("Upload percentage: " + uploader.getProgress());
                             break;
                         case MEDIA_COMPLETE:
                             System.out.println("Upload Completed!");

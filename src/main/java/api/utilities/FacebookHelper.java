@@ -8,7 +8,9 @@ import com.restfb.types.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 
 import static java.lang.System.out;
 
@@ -79,15 +81,34 @@ public class FacebookHelper {
         return publishMessageResponse;
     }
 
-    public GraphResponse publishPhoto(String accessToken, String imageFile) {
-        byte[] imageBytes = fetchBytesFromImage(imageFile);
+    public GraphResponse publishPhoto(String accessToken, String fileName, DataInputStream is,
+                                      String titleName, String description)
+            throws Exception {
         FacebookClient facebookClient = getFaceBookClient(accessToken);
         GraphResponse publishPhotoResponse = facebookClient.publish("me/photos", GraphResponse.class,
-                BinaryAttachment.with("cat.png", getClass().getResourceAsStream("/cat.png")),
-                Parameter.with("message", "Test cat"));
-
+                BinaryAttachment.with(fileName, is),
+                Parameter.with("title", titleName),
+                Parameter.with("privacy", "{'value': 'SELF'}"));
         out.println("Published photo ID: " + publishPhotoResponse.getId());
         return publishPhotoResponse;
+    }
+
+    public GraphResponse publishVideo(String accessToken, String fileName, DataInputStream is, String titleName, String description)
+            throws Exception {
+        FacebookClient facebookClient = getFaceBookClient(accessToken);
+        GraphResponse publishVideoResponse = facebookClient.publish("me/videos", GraphResponse.class,
+                BinaryAttachment.with(fileName, is),
+                Parameter.with("title", titleName),
+                Parameter.with("description", description));
+        return publishVideoResponse;
+
+//        facebookClient.publish("me/videos", FacebookType.class,
+//                BinaryAttachment.with(fileName, is),
+//                Parameter.with("title", titleName),
+//                Parameter.with("description", description));
+
+        //out.println("Published video ID: " + publishVideoResponse.getId());
+        //return publishVideoResponse;
     }
 
     private byte[] fetchBytesFromImage(String imageFile) {
