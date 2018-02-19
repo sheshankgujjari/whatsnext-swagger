@@ -37,8 +37,12 @@ public class YoutubeController {
     public Video uploadVideo(@RequestHeader String videoFileName,
                              @RequestParam("file") MultipartFile file)
             throws IOException {
+        File newFile = new File(file.getOriginalFilename());
+        newFile.createNewFile();
        // InputStream stream = YoutubeController.class.getResourceAsStream(file.getBytes().toString());
-        DataInputStream is =new DataInputStream(new FileInputStream(new File(file.getOriginalFilename())));
-        return YoutubeHelper.uploadVideo(videoFileName, is);
+        DataInputStream is =new DataInputStream(new FileInputStream(newFile));
+        Video video = YoutubeHelper.uploadVideo(videoFileName, is);
+        newFile.delete();
+        return video;
     }
 }

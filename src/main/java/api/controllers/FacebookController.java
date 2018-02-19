@@ -31,12 +31,16 @@ public class FacebookController {
                                       @RequestHeader String description,
                                       @RequestParam("file") MultipartFile file)
             throws Exception {
-        DataInputStream is =new DataInputStream(
-                new FileInputStream(new File(file.getOriginalFilename())));
+        File newFile = new File(file.getOriginalFilename());
+        newFile.createNewFile();
+        DataInputStream is =new DataInputStream(new FileInputStream(new File(file.getOriginalFilename())));
+        newFile.delete();
         System.out.println("Get user data");
         System.out.println("Access Token :" + accessToken);
         FacebookHelper helper = new FacebookHelper();
-        return helper.publishVideo(accessToken, file.getOriginalFilename(), is, title, description);
+        GraphResponse response = helper.publishVideo(accessToken, file.getOriginalFilename(), is, title, description);
+        newFile.delete();
+        return response;
     }
 
 

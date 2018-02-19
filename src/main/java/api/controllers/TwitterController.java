@@ -5,18 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.social.ExpiredAuthorizationException;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import twitter4j.Status;
 
-import javax.inject.Inject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.List;
 
 @RestController
 @RequestMapping("/twitter")
@@ -32,27 +29,51 @@ public class TwitterController {
     @Autowired
     private ConnectionRepository connectionRepository;
 
-    @Inject
-    public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
-        this.connectionRepository = connectionRepository;
-        this.twitter = twitter;
-    }
+    public String consumerKey = "cGHb4UlsqYHHvqrjFReyVud4W";
+    public String consumerSecret = "KfuQNcFtq894tW0NJX6p1DKjYMxeaedhcB4CEAq4LwD8iaugM3";
+    public String accessToken = "965455322746892288-kxvpWjr7aSrVQyk9av2OFmYwcet8mBz";
+    public String accessTokenSecret = "9VprzuKa4kVgZshjlZHgJy9UBy7N9F5sDLqVbdWbhcjxC";
 
 
     @RequestMapping(value="/tweet", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Tweet postTweet(String message) {
-
+    public Tweet postTweet(@RequestHeader  String message) {
+        TwitterHelper helper = new TwitterHelper();
+        twitter = helper.twitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         return twitter.timelineOperations().updateStatus(message);
     }
 
     @RequestMapping(value = "/uploadTimeLine", method = RequestMethod.POST , consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public void uploadTimeLine(@RequestParam("file") MultipartFile file) throws Exception {
-        DataInputStream is =new DataInputStream(new FileInputStream(new File(file.getOriginalFilename())));
-        Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
-        Tweet tweet = twitter.timelineOperations().updateStatus(new TweetData("Test Message").withMedia(photo));
-        //TwitterHelper.updateStatus(twitter, "Test");
+    public Status uploadTimeLine(@RequestParam("file") MultipartFile file) throws Exception {
+        try {
+            File newFile = new File(file.getOriginalFilename());
+            newFile.createNewFile();
+            DataInputStream is =new DataInputStream(new FileInputStream(newFile));
+            newFile.delete();
+            TwitterHelper client = new TwitterHelper();
+            return client.postContent(consumerKey, consumerSecret, accessToken, accessTokenSecret, file, is);
+
+//            File newFile = new File(file.getOriginalFilename());
+//            newFile.createNewFile();
+//            FileOutputStream fos = new FileOutputStream(newFile);
+//            fos.write(file.getBytes());
+//            fos.close();
+//            DataInputStream is =new DataInputStream(new FileInputStream(newFile));
+//            Resource media = getUploadResource(file.getOriginalFilename(), fos.toString());
+//            //getUploadResource("photo.jpg", "PHOTO DATA");
+//            TwitterHelper helper = new TwitterHelper();
+//            twitter = helper.twitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+//            MultiValueMap<String, Object> uploadParams = new LinkedMultiValueMap<>();
+//            uploadParams.set("media_data", imageData.getImageBase64()); //its encoded
+//            MediaUploadResponse response = executePostCommandWithReturn(() -> twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json", uploadParams, MediaUploadResponse.class));
+//            Tweet tweet = twitter.timelineOperations().updateStatus(new TweetData(file.getOriginalFilename()).withMedia(media));
+//            return tweet;
+        }catch (Exception ex){
+            System.out.println("ERROR Creating FIle from MultiPartFile: " + ex.getMessage());
+            return null;
+        }
+
     }
 
     private Resource getUploadResource(final String filename, String content) {

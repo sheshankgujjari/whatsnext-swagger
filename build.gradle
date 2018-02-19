@@ -46,6 +46,8 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-social-twitter'
     compile group: 'org.twitter4j', name: 'twitter4j-core', version:'[3.0,)'
     compile group: 'com.google.guava', name: 'guava'
+    compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
+
 }
 
     tasks.withType(JavaCompile) {
