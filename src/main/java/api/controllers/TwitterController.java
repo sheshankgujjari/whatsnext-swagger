@@ -45,38 +45,44 @@ public class TwitterController {
         return TwitterHelper.getFollowersCount(twitter, userName);
     }
 
-    @RequestMapping(value = "/gethashtags/{hashTag}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/gethashtags/{hashTag}", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Tweet> getTweets(@PathVariable final String hashTag)
     {
         return TwitterHelper.getHashTagTweets(twitter, hashTag);
     }
 
-    @RequestMapping(value = "/getmytimeline/{name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/getmytimeline/{name}", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Tweet> getMyTimeLine(@PathVariable final String name)
     {
         return TwitterHelper.getMyTimeLine(twitter, name);
     }
 
-    @RequestMapping(value = "/getuserprofile", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/getuserprofile", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TwitterProfile getUserProfile()
     {
         return TwitterHelper.getUserProfile(twitter);
     }
 
-    @RequestMapping(value = "/getscreenname",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/getscreenname", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getScreenName()
     {
         return TwitterHelper.getScreenName(twitter);
     }
 
-    @RequestMapping(value = "/getfriends", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/getfriends", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CursoredList<TwitterProfile> getFriends()
     {
         CursoredList<TwitterProfile> friends = TwitterHelper.getFriends(twitter);
         return friends;
     }
 
-    @RequestMapping(value = "/gethometimeline", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/gethometimeline", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Tweet> getHomeTimeLine()
     {
         return TwitterHelper.getHomeTimeLine(twitter);
@@ -137,7 +143,8 @@ public class TwitterController {
         return twitter.friendOperations().getFollowers();
     }
 
-    @RequestMapping("/twitter/revoked")
+    @RequestMapping(value = "/twitter/revoked", method= RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void simulateExpiredToken() {
         throw new ExpiredAuthorizationException("twitter");
     }
