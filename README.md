@@ -19,7 +19,7 @@ Build the jar
 Run the Jar after build
 
 ```
-java -jar build/libs/swagger-spring-rest-api-1.0.jar
+java -jar build/libs/whatsnext-swagger-1.0.jar
 ```
 
 #Run the app
