@@ -18,25 +18,17 @@ import java.io.FileInputStream;
 @RestController
 @RequestMapping("/twitter")
 public class TwitterController {
-    public static final String TWITTER_BASE_URI = "/twitter";
-
-    private static final long WORLDWIDE_WOE = 1L;
 
 
     @Autowired
     public Twitter twitter;
 
-    @Autowired
-    private ConnectionRepository connectionRepository;
-
-    public String consumerKey = "cGHb4UlsqYHHvqrjFReyVud4W";
-    public String consumerSecret = "KfuQNcFtq894tW0NJX6p1DKjYMxeaedhcB4CEAq4LwD8iaugM3";
-    public String accessToken = "965455322746892288-kxvpWjr7aSrVQyk9av2OFmYwcet8mBz";
-    public String accessTokenSecret = "9VprzuKa4kVgZshjlZHgJy9UBy7N9F5sDLqVbdWbhcjxC";
-
-
     @RequestMapping(value="/tweet", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Tweet postTweet(@RequestHeader  String message) {
+    public Tweet postTweet(@RequestHeader  String message,
+                           @RequestHeader String consumerKey,
+                           @RequestHeader String consumerSecret,
+                           @RequestHeader String accessToken,
+                           @RequestHeader String accessTokenSecret) {
         TwitterHelper helper = new TwitterHelper();
         twitter = helper.twitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         return twitter.timelineOperations().updateStatus(message);
@@ -45,30 +37,14 @@ public class TwitterController {
     @RequestMapping(value = "/uploadTimeLine", method = RequestMethod.POST , consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Status uploadTimeLine(@RequestParam("file") MultipartFile file) throws Exception {
+    public Status uploadTimeLine(@RequestParam("file") MultipartFile file,
+                                 @RequestHeader String consumerKey,
+                                 @RequestHeader String consumerSecret,
+                                 @RequestHeader String accessToken,
+                                 @RequestHeader String accessTokenSecret) throws Exception {
         try {
-            File newFile = new File(file.getOriginalFilename());
-            newFile.createNewFile();
-            DataInputStream is =new DataInputStream(new FileInputStream(newFile));
-            newFile.delete();
             TwitterHelper client = new TwitterHelper();
-            return client.postContent(consumerKey, consumerSecret, accessToken, accessTokenSecret, file, is);
-
-//            File newFile = new File(file.getOriginalFilename());
-//            newFile.createNewFile();
-//            FileOutputStream fos = new FileOutputStream(newFile);
-//            fos.write(file.getBytes());
-//            fos.close();
-//            DataInputStream is =new DataInputStream(new FileInputStream(newFile));
-//            Resource media = getUploadResource(file.getOriginalFilename(), fos.toString());
-//            //getUploadResource("photo.jpg", "PHOTO DATA");
-//            TwitterHelper helper = new TwitterHelper();
-//            twitter = helper.twitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
-//            MultiValueMap<String, Object> uploadParams = new LinkedMultiValueMap<>();
-//            uploadParams.set("media_data", imageData.getImageBase64()); //its encoded
-//            MediaUploadResponse response = executePostCommandWithReturn(() -> twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json", uploadParams, MediaUploadResponse.class));
-//            Tweet tweet = twitter.timelineOperations().updateStatus(new TweetData(file.getOriginalFilename()).withMedia(media));
-//            return tweet;
+            return client.postContent(consumerKey, consumerSecret, accessToken, accessTokenSecret, file);
         }catch (Exception ex){
             System.out.println("ERROR Creating FIle from MultiPartFile: " + ex.getMessage());
             return null;

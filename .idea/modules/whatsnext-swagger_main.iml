@@ -18,7 +18,7 @@
     <orderEntry type="library" name="Gradle: io.springfox:springfox-swagger2:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: io.springfox:springfox-swagger-ui:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-security:1.5.8.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: com.restfb:restfb:1.46.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.restfb:restfb:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.api-client:google-api-client:1.23.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.oauth-client:google-oauth-client-jetty:1.23.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.apis:google-api-services-drive:v3-rev86-1.23.0" level="project" />
@@ -83,8 +83,8 @@
     <orderEntry type="library" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jul-to-slf4j:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:log4j-over-slf4j:1.7.25" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.springframework.data:spring-data-rest-core:2.6.8.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.tomcat:tomcat-annotations-api:8.5.23" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.springframework.data:spring-data-rest-core:2.6.8.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.1.11" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.4.8" level="project" />

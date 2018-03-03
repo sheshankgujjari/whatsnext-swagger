@@ -34,15 +34,11 @@ public class YoutubeController {
 
     @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST , consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Video uploadVideo(@RequestHeader String videoFileName,
+    public String uploadVideo(@RequestHeader String videoFileName,
                              @RequestParam("file") MultipartFile file)
-            throws IOException {
-        File newFile = new File(file.getOriginalFilename());
-        newFile.createNewFile();
-       // InputStream stream = YoutubeController.class.getResourceAsStream(file.getBytes().toString());
-        DataInputStream is =new DataInputStream(new FileInputStream(newFile));
-        Video video = YoutubeHelper.uploadVideo(videoFileName, is);
-        newFile.delete();
-        return video;
+            throws Exception {
+        Video video = YoutubeHelper.uploadVideo(videoFileName, file);
+        String youtubeUrl = "https://www.youtube.com/watch?v=" + video.getId();
+        return youtubeUrl;
     }
 }

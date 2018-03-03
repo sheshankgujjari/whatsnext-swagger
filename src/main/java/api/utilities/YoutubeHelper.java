@@ -17,7 +17,9 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
 import com.google.api.services.youtube.model.*;
+import com.google.common.io.ByteSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -237,7 +239,7 @@ public class YoutubeHelper {
         }
     }
 
-    public static Video uploadVideo(String videoFileName, InputStream is) {
+    public static Video uploadVideo(String videoFileName, MultipartFile file) {
        try {
             List<String> scopes =
                     Arrays.asList(YouTubeScopes.YOUTUBE_UPLOAD);
@@ -267,7 +269,7 @@ public class YoutubeHelper {
 //            snippet.setTitle("Test Upload via Java on " + cal.getTime());
 //            snippet.setDescription(
 //                    "Video uploaded via YouTube Data API V3 using the Java library " + "on " + cal.getTime());
-           snippet.setTitle(videoFileName + "Time: " + cal.getTime());
+           snippet.setTitle(videoFileName + " Time: " + cal.getTime());
 
             // Set the keyword tags that you want to associate with the video.
 //            List<String> tags = new ArrayList<String>();
@@ -281,7 +283,9 @@ public class YoutubeHelper {
             // Add the completed snippet object to the video resource.
             videoObjectDefiningMetadata.setSnippet(snippet);
 
-            InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT, is);
+           byte[] data = file.getBytes();
+           InputStream targetStream = ByteSource.wrap(data).openStream();
+            InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT, targetStream);
 
            //InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT, YoutubeHelper.class.getResourceAsStream("/sample-video.mp4"));
 
@@ -333,7 +337,7 @@ public class YoutubeHelper {
             // Call the API and upload the video.
             Video returnedVideo = videoInsert.execute();
 
-            // Print data about the newly inserted video from the API response.
+
             System.out.println("\n================== Returned Video ==================\n");
             System.out.println("  - Id: " + returnedVideo.getId());
             System.out.println("  - Title: " + returnedVideo.getSnippet().getTitle());

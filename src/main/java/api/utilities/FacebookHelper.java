@@ -4,6 +4,7 @@ package api.utilities;
 import api.model.Count;
 import com.restfb.*;
 import com.restfb.types.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -93,41 +94,17 @@ public class FacebookHelper {
         return publishPhotoResponse;
     }
 
-    public GraphResponse publishVideo(String accessToken, String fileName, DataInputStream is, String titleName, String description)
+    public GraphResponse publishVideo(String accessToken,
+                                     MultipartFile file,
+                                      String titleName, String description)
             throws Exception {
         FacebookClient facebookClient = getFaceBookClient(accessToken);
+        byte[] data = file.getBytes();
         GraphResponse publishVideoResponse = facebookClient.publish("me/videos", GraphResponse.class,
-                BinaryAttachment.with(fileName, is),
+                BinaryAttachment.with(file.getOriginalFilename(), data),
                 Parameter.with("title", titleName),
                 Parameter.with("description", description));
         return publishVideoResponse;
-
-//        facebookClient.publish("me/videos", FacebookType.class,
-//                BinaryAttachment.with(fileName, is),
-//                Parameter.with("title", titleName),
-//                Parameter.with("description", description));
-
-        //out.println("Published video ID: " + publishVideoResponse.getId());
-        //return publishVideoResponse;
-    }
-
-    private byte[] fetchBytesFromImage(String imageFile) {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte fileContent[] = null;
-
-        try{
-
-            BufferedImage image = ImageIO.read(new File(imageFile));
-
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            fileContent = baos.toByteArray();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return  fileContent;
 
     }
 
