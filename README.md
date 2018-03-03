@@ -34,6 +34,7 @@ Prerequisite
 
 Check the image registerTwitter in images folder on how to create an app in Twitter
 
+```
 Go to https://apps.twitter.com/
 Once you create an app
 Click on Keys and Access Token
@@ -42,12 +43,7 @@ Copy and paste it in /resources/application.properties
 2. Consumer Secret (API Secret)
 3. Access Token
 4. Access Token Secret
-
-Paste the above copied details in /resources/application.properties
-spring.social.twitter.app-id=Consumer Key (API Key)
-spring.social.twitter.app-secret=Consumer Secret (API Secret)
-spring.social.twitter.access-token=Access Token
-spring.social.twitter.access-token-secret=Access Token Secret
+```
 
 
 #Google(Youtube and Drive) Controller
@@ -57,10 +53,12 @@ Create a new project in https://console.developers.google.com
 
 Remove local credentials from your machine and start from fresh
 
+```
 cd ~/.credentials/drive-java-quickstart
 rm StoredCredential
 cd ~/.credentials/youtube-java-quickstart
 rm StoredCredential
+```
 
 
 #Facebook Controller
