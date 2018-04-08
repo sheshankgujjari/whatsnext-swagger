@@ -89,10 +89,9 @@ public class YoutubeHelper {
      * @return an authorized Credential object.
      * @throws IOException
      */
-    public static Credential authorize(List<String> scopes) throws IOException {
-        // Load client secrets.
+    public static Credential authorize(List<String> scopes, String clientSecret) throws IOException {
         InputStream in =
-                YoutubeHelper.class.getResourceAsStream("/client_secret.json");
+                YoutubeHelper.class.getResourceAsStream(clientSecret);
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -115,17 +114,17 @@ public class YoutubeHelper {
      * @return an authorized API client service
      * @throws IOException
      */
-    public static YouTube getYouTubeService(List<String> scopes) throws IOException {
-        Credential credential = authorize(scopes);
+    public static YouTube getYouTubeService(List<String> scopes, String clientSecret) throws IOException {
+        Credential credential = authorize(scopes, clientSecret);
         return new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
 
-    public static List<Channel> getYoutubeChannels() throws IOException {
+    public static List<Channel> getYoutubeChannels(String clientSecret) throws IOException {
         List<String> scopes =
                 Arrays.asList(YouTubeScopes.YOUTUBE_READONLY);
-        YouTube youtube = getYouTubeService(scopes);
+        YouTube youtube = getYouTubeService(scopes, clientSecret);
         try {
             YouTube.Channels.List channelsListByUsernameRequest = youtube.channels()
                     .list("snippet,contentDetails,statistics");
@@ -153,12 +152,12 @@ public class YoutubeHelper {
         }
     }
 
-    public static List<PlaylistItem> getListOfUploadedYouTubeVideos() {
+    public static List<PlaylistItem> getListOfUploadedYouTubeVideos(String clientSecret) {
         List<PlaylistItem> playlistItemList = new ArrayList<PlaylistItem>();
         try {
             List<String> scopes =
                     Arrays.asList(YouTubeScopes.YOUTUBE_READONLY);
-            YouTube youtube = getYouTubeService(scopes);
+            YouTube youtube = getYouTubeService(scopes, clientSecret);
             YouTube.Channels.List channelRequest = youtube.channels().list("contentDetails");
             channelRequest.setMine(true);
             channelRequest.setFields("items/contentDetails,nextPageToken,pageInfo");
@@ -239,11 +238,11 @@ public class YoutubeHelper {
         }
     }
 
-    public static Video uploadVideo(String videoFileName, MultipartFile file) {
+    public static Video uploadVideo(String videoFileName, MultipartFile file, String clientSecret) {
        try {
             List<String> scopes =
                     Arrays.asList(YouTubeScopes.YOUTUBE_UPLOAD);
-            YouTube youtube = getYouTubeService(scopes);
+            YouTube youtube = getYouTubeService(scopes, clientSecret);
             if(!videoFileName.contains(".mp4")) {
                 videoFileName = videoFileName + ".mp4";
             }

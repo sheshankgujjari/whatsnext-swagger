@@ -1,5 +1,8 @@
 package api.controllers;
 
+import api.model.Customer;
+import api.model.YoutubePost;
+import api.utilities.DbHelper;
 import api.utilities.YoutubeHelper;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.PlaylistItem;
@@ -9,36 +12,40 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/youtube")
 public class YoutubeController {
-//    @RequestMapping(method= RequestMethod.GET)
-//    String index(){
-//        return "youtube";
-//    }
-
-//    @RequestMapping(value = "/getYoutubeChannels", method = RequestMethod.GET ,
-//            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public List<Channel> getYoutubeChannels() throws IOException {
-//        List<Channel> channelList = YoutubeHelper.getYoutubeChannels();
-//        return channelList;
-//    }
-//
-//    @RequestMapping(value = "/getListOfUploadedYouTubeVideos", method = RequestMethod.GET ,
-//            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public List<PlaylistItem> getListOfUploadedYouTubeVideos() throws IOException {
-//         return YoutubeHelper.getListOfUploadedYouTubeVideos();
-//    }
 
     @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST , consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String uploadVideo(@RequestHeader String videoFileName,
+    public String uploadVideo(@RequestHeader String userName,
+                              @RequestHeader String videoFileName,
                              @RequestParam("file") MultipartFile file)
             throws Exception {
-        Video video = YoutubeHelper.uploadVideo(videoFileName, file);
-        String youtubeUrl = "https://www.youtube.com/watch?v=" + video.getId();
-        return youtubeUrl;
+        if(DbHelper.checkUserExist(userName)) {
+            Customer customer = DbHelper.getCustomerDetails(userName);
+            Video video = YoutubeHelper.uploadVideo(videoFileName, file, customer.googleClientSecret);
+            String youtubeUrl = "https://www.youtube.com/watch?v=" + video.getId();
+            DbHelper.insertYoutubePost(customer.getCustomerId(), youtubeUrl);
+            return youtubeUrl;
+        } else {
+            return "Customer doesn't exist";
+        }
+    }
+
+    @RequestMapping(value = "/getPosts", method = RequestMethod.GET ,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<YoutubePost> getPosts(@RequestHeader String userName)
+    {
+        System.out.println("Get user data");
+        System.out.println("UserName :" + userName);
+        List<YoutubePost> listOfPost = new ArrayList<YoutubePost>();
+        if(DbHelper.checkUserExist(userName)) {
+            listOfPost = DbHelper.getYoutubePosts(userName);
+        }
+        return listOfPost;
     }
 }
