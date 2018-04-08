@@ -98,6 +98,9 @@ public class TwitterController {
         System.out.println("UserName :" + userName);
         if(DbHelper.checkUserExist(userName)) {
             Customer customer = DbHelper.getCustomerDetails(userName);
+            //TODO
+        } else {
+            //TODO
         }
     }
 }

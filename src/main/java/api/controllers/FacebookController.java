@@ -50,6 +50,7 @@ public class FacebookController {
         if(DbHelper.checkUserExist(userName)) {
             Customer customer = DbHelper.getCustomerDetails(userName);
             graphResponse = helper.publishVideo(customer.getFbAccessToken(), file, title, description);
+            //TODO
             String facebookUrl = "";
             DbHelper.insertFacebookPost(customer.getCustomerId(), facebookUrl);
             return graphResponse;
@@ -92,7 +93,7 @@ public class FacebookController {
         System.out.println("UserName :" + userName);
         if(DbHelper.checkUserExist(userName)) {
             Customer customer = DbHelper.getCustomerDetails(userName);
-            Count count = FacebookHelper.getCountOfCommentsLikesAndShares(userName, postId);
+            Count count = FacebookHelper.getCountOfCommentsLikesAndShares(customer.getFbAccessToken(), postId);
             return count;
         }
         return null;
