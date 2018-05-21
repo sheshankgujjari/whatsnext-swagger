@@ -30,7 +30,7 @@ public class TwitterController {
             Customer customer = DbHelper.getCustomerDetails(userName);
             twitter = twitterHelper.twitterTemplate(customer.getTwitterConsumerKey(), customer.getTwitterConsumerSecret(),
                     customer.getTwitterAccessToken(), customer.getTwitterAccessTokenSecret());
-            //TODO
+            System.out.println("Customer Id " + customer.getCustomerId());
             String twitterUrl = "";
             DbHelper.insertTwitterPost(customer.getCustomerId(), twitterUrl);
         }

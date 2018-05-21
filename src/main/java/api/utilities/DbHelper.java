@@ -24,6 +24,7 @@ public class DbHelper {
 
     public static boolean checkUserExist(String userName) {
         String SQL = "SELECT * FROM customer WHERE user_name = ?";
+        System.out.println("Sql Statement " + SQL);
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(SQL)) {
 
@@ -42,6 +43,7 @@ public class DbHelper {
 
     public static Customer getCustomerDetails(String userName) {
         String SQL = "SELECT * FROM customer WHERE user_name = ?";
+        System.out.println("Sql Statement " + SQL);
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(SQL)) {
 
@@ -76,6 +78,7 @@ public class DbHelper {
 
     public static List<FacebookPost> getFacebookPosts(String userName) {
         String SQL = "select fb_post_id, c.customer_id, fb_post_url from facebook_post fp inner join customer c on fp.customer_id = c.customer_id where c.user_name = ?";
+        System.out.println("Sql Statement " + SQL);
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(SQL)) {
             pstmt.setString(1, userName);
@@ -97,7 +100,8 @@ public class DbHelper {
     }
 
     public static List<TwitterPost> getTwitterPosts(String userName) {
-        String SQL = "select twtr_post_id, c.customer_id, twtr_post_url from twtr_post tp inner join customer c on tp.customer_id = c.customer_id where c.user_name = ?";
+        String SQL = "select twtr_post_id, c.customer_id, twtr_post_url from twitter_post tp inner join customer c on tp.customer_id = c.customer_id where c.user_name = ?";
+        System.out.println("Sql Statement " + SQL);
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(SQL)) {
             pstmt.setString(1, userName);
@@ -120,6 +124,7 @@ public class DbHelper {
 
     public static List<YoutubePost> getYoutubePosts(String userName) {
         String SQL = "select ytb_post_id, c.customer_id, ytb_post_url from youtube_post yp inner join customer c on yp.customer_id = c.customer_id where c.user_name = ?";
+        System.out.println("Sql Statement " + SQL);
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(SQL)) {
             pstmt.setString(1, userName);
@@ -146,8 +151,8 @@ public class DbHelper {
         Statement statement = null;
         String sql = "INSERT INTO youtube_post (customer_id, ytb_post_url, created_date) VALUES (customerId, youtubePostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
         try {
+            System.out.println("Sql Statement " + sql);
             statement = dbConnection.createStatement();
-            System.out.println(sql);
             statement.executeUpdate(sql);
             System.out.println("Record is inserted into youtube table!");
         } catch (SQLException e) {
@@ -170,8 +175,8 @@ public class DbHelper {
         Statement statement = null;
         String sql = "INSERT INTO facebook_post (customer_id, fb_post_url, created_date) VALUES (customerId, facebookPostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
         try {
+            System.out.println("Sql Statement " + sql);
             statement = dbConnection.createStatement();
-            System.out.println(sql);
             statement.executeUpdate(sql);
             System.out.println("Record is inserted into facebook table!");
         } catch (SQLException e) {
@@ -192,10 +197,10 @@ public class DbHelper {
     public static void insertTwitterPost(int customerId, String twitterPostUrl) throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
-        String sql = "INSERT INTO twitter_post (customerId, fb_post_url, created_date) VALUES (customerId, twitterPostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
+        String sql = "INSERT INTO twitter_post (customerId, twtr_post_url, created_date) VALUES (customerId, twitterPostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
         try {
+            System.out.println("Sql Statement " + sql);
             statement = dbConnection.createStatement();
-            System.out.println(sql);
             statement.executeUpdate(sql);
             System.out.println("Record is inserted into twitter table!");
         } catch (SQLException e) {
