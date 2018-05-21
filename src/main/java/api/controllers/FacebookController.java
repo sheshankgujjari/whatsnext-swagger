@@ -3,7 +3,6 @@ package api.controllers;
 import api.model.Count;
 import api.model.Customer;
 import api.model.FacebookPost;
-import api.model.YoutubePost;
 import api.utilities.DbHelper;
 import api.utilities.FacebookHelper;
 import com.restfb.Connection;
@@ -12,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +28,7 @@ public class FacebookController {
         if(DbHelper.checkUserExist(userName)) {
             Customer customer = DbHelper.getCustomerDetails(userName);
             graphResponse = FacebookHelper.publishMessage(customer.getFbAccessToken(), text);
-            //TODO
-            String facebookUrl = "";
+            String facebookUrl = "https://www.facebook.com/pcs.digicamp.1/posts/" + graphResponse.getPostId();
             DbHelper.insertFacebookPost(customer.getCustomerId(), facebookUrl);
         }
         return graphResponse;
@@ -49,9 +46,10 @@ public class FacebookController {
         GraphResponse graphResponse = new GraphResponse();
         if(DbHelper.checkUserExist(userName)) {
             Customer customer = DbHelper.getCustomerDetails(userName);
+            System.out.println("Fb Access Token " + customer.getFbAccessToken());
             graphResponse = helper.publishVideo(customer.getFbAccessToken(), file, title, description);
-            //TODO
-            String facebookUrl = "";
+            String facebookUrl = "https://www.facebook.com/pcs.digicamp.1/videos/" + graphResponse.getPostId();
+            System.out.println("Facebook url " + facebookUrl);
             DbHelper.insertFacebookPost(customer.getCustomerId(), facebookUrl);
             return graphResponse;
         }

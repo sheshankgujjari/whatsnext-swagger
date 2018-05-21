@@ -49,8 +49,9 @@ public class TwitterController {
                 Customer customer = DbHelper.getCustomerDetails(userName);
                 Status status = twitterHelper.postContent(customer.getTwitterConsumerKey(), customer.getTwitterConsumerSecret(),
                         customer.getTwitterAccessToken(), customer.getTwitterAccessTokenSecret(), file);
-                //TODO
-                String twitterUrl = "";
+                String twitterUrl= "https://twitter.com/" + status.getUser().getScreenName()  + "/status/" + status.getId();
+
+                System.out.println(twitterUrl);
                 DbHelper.insertTwitterPost(customer.getCustomerId(), twitterUrl);
                 return status;
             } else {

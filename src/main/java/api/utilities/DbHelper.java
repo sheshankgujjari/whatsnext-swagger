@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DbHelper {
 
-    private static final String url = "jdbc:postgresql://whatsnext.cqee8ex7ewfk.us-west-2.rds.amazonaws.com:5432/whatsnext";
+    private static final String url = "jdbc:postgresql://whatsnext.c2qen7dwjp3m.us-east-1.rds.amazonaws.com:5432/whatsnext";
     private static final String user = "postgres";
     private static final String password = "postgres";
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -192,7 +192,7 @@ public class DbHelper {
     public static void insertTwitterPost(int customerId, String twitterPostUrl) throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
-        String sql = "INSERT INTO facebook_post (customerId, fb_post_url, created_date) VALUES (customerId, twitterPostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
+        String sql = "INSERT INTO twitter_post (customerId, fb_post_url, created_date) VALUES (customerId, twitterPostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
         try {
             statement = dbConnection.createStatement();
             System.out.println(sql);
