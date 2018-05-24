@@ -9,6 +9,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DbHelper {
@@ -197,11 +198,19 @@ public class DbHelper {
     public static void insertTwitterPost(int customerId, String twitterPostUrl) throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
-        String sql = "INSERT INTO twitter_post (customerId, twtr_post_url, created_date) VALUES (customerId, twitterPostUrl,to_timestamp(getCurrentTimeStamp(), 'yyyy/mm/dd hh24:mi:ss'))";
-        try {
+        String sql = "INSERT INTO twitter_post (customer_id, twtr_post_url, created_date) VALUES (?, ?,?)";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             System.out.println("Sql Statement " + sql);
-            statement = dbConnection.createStatement();
-            statement.executeUpdate(sql);
+            pstmt.setInt(1, customerId);
+            pstmt.setString(2, twitterPostUrl);
+            Calendar calendar = Calendar.getInstance();
+            java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
+            pstmt.setTimestamp(3, ourJavaTimestampObject);
+            pstmt.executeUpdate(sql);
+            pstmt.close();
+//            statement = dbConnection.createStatement();
+//            statement.executeUpdate(sql);
             System.out.println("Record is inserted into twitter table!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
